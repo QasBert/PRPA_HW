@@ -25,7 +25,7 @@ int main(){
     }
     if (scanf("%[^\n]", decoder_key) == 0){
         fprintf(stderr, "Error: Chybny vstup (input: decoder_key)\n");
-        return 100
+        return 100;
     }
 
 }
