@@ -4,16 +4,16 @@
 
 typedef enum {false, true} bool;
 
-bool input_check (int size, const char * field);
-bool lenght_check (int size, const char * field);
-int same (int size, const char first_field[], const char second_field[], int correct);
-void shift (char *field, int size);
+bool input_check    (int size, const char * field);
+bool lenght_check   (int size, const char * field);
+int  same           (int size, const char first_field[], const char second_field[], int correct);
+void shift          (char *field, int size);
 
 int main(){
     /* Input */
-    int message_lenght;
-    char coded_message[message_lenght + 1];
-    char decoder_key[message_lenght + 1];
+    int     message_lenght;
+    char    coded_message[message_lenght + 1];
+    char    decoder_key[message_lenght + 1];
     
     memset(coded_message, 0, message_lenght + 1);
     memset(decoder_key, 0, message_lenght + 1);
