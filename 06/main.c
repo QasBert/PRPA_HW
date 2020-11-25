@@ -11,39 +11,37 @@ void shift          (char *field, int size);
 
 int main(){
     /* Input */
-    int     message_lenght;
-    char    coded_message[message_lenght + 1];
-    char    decoder_key[message_lenght + 1];
-    
-    memset(coded_message, 0, message_lenght + 1);
-    memset(decoder_key, 0, message_lenght + 1);
+    int     message_lenght = 0;
     
     /* Input check */
     if (scanf("%d", &message_lenght) == 0){
         fprintf(stderr, "Error: Chybny vstup!\n");
         return 100;
     }
+    char    coded_message[message_lenght + 1];
+    char    decoder_key[message_lenght + 1];
+    memset(coded_message, 0, message_lenght + 1);
+    memset(decoder_key, 0, message_lenght + 1);
     if (scanf(" %[^\n]", coded_message) != 1){
-        fprintf(stderr, "Error: Chybny vstup!\n");
+        fprintf(stderr, "Error: Chybny vstup!");
         return 100;
     }
     if (scanf(" %[^\n]", decoder_key) != 1){
-        fprintf(stderr, "Error: Chybny vstup!\n");
+        fprintf(stderr, "Error: Chybny vstup!");
         return 100;
     }
     if (input_check (message_lenght, coded_message) == false || input_check (message_lenght, decoder_key) == false){
-        fprintf(stderr, "Error: Chybny vstup!\n");
+        fprintf(stderr, "Error: Chybny vstup!   ");
         return 100;
     }
     if (lenght_check (message_lenght, coded_message) == false || lenght_check (message_lenght, decoder_key) == false){
-        fprintf(stderr, "Error: Chybna delka vstupu!\n");
+        fprintf(stderr, "Error: Chybna delka vstupu!");
         return 101;
     }
 
     /* Firs run - find highest compliance */
     int correct_letters = 0;
     int highest = 0;
-    int lowest = 0;
     for (int i = 0; i < 52; ++i)
     {
         correct_letters = same (message_lenght, coded_message, decoder_key, correct_letters);
