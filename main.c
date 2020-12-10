@@ -2,7 +2,6 @@
 #include <stdlib.h>
 /* HW08 - Zpracovani ciselne rady */
 
-// Funkce - getmin, getmax, 
 int   GetLocalMinimum (const int * field, int count);
 int   GetLocalMaximum (const int * field, int count);
 float GetMedian       (const int * integer_numbers, int count);
