@@ -2,98 +2,125 @@
 #include <stdlib.h>
 /* HW08 - Zpracovani ciselne rady */
 
-int main(){
-    int max_delka = 1;
-    int soucasna_velikost = 0;
-    int pocet_cisel = 0;
-    int sloupce = 0;
-    int *cisla = (int *)malloc(max_delka* sizeof(int));
-    int c = 0;
-    int i = 0;
+// Funkce - getmin, getmax, 
+int   GetLocalMinimum (const int * field, int count);
+int   GetLocalMaximum (const int * field, int count);
+float GetMedian       (const int * integer_numbers, int count);
+void Histogram        (int histogram_size, int min, int max, int number_count,const int * numbers);
 
-    if (scanf("%d", &sloupce) != 1) {
-        fprintf(stderr, "Hiistogram size error\n");
+int main(){
+    /* Input */
+    int current_size    = 0;
+    int number_count    = 0;
+    int histogram_size  = 0;
+    int *numbers        = (int *)malloc(1 * sizeof(int));
+    int current_number  = 0;
+    int field_position  = 0;
+
+    /* Histogram size check */
+    if (scanf("%d", &histogram_size) != 1) {
+        fprintf(stderr, "Histogram size error\n");
         return 100;
     }
-    if (sloupce <= 0) {
+    if (histogram_size <= 0) {
         fprintf(stderr, "Histogram size error\n");
         return 100;
     }
 
-    soucasna_velikost = max_delka;
-    while ((c = getchar()) != '\n') {
-        if (scanf("%d", &c) != 1) {
+    /* Load numbers */
+    current_size = 1;
+    while ((current_number = getchar()) != '\n') {
+        if (scanf("%d", &current_number) != 1) {
             break;
         }
-        pocet_cisel++;
-        cisla[i] = c;
-        i++;
-        if (i == soucasna_velikost) {
-            soucasna_velikost = i + max_delka;
-            cisla = realloc(cisla, soucasna_velikost * sizeof(int));
+        number_count++;
+        numbers[field_position] = current_number;
+        field_position++;
+        if (field_position == current_size) {
+            current_size = field_position + 1;
+            numbers = realloc(numbers, current_size * sizeof(int));
         }
     }
 
-    int min = 10000;
-    int max = -10000;
-    for (int j = 0; j < pocet_cisel; j++) {
-        if (cisla[j] > max)
-            max = cisla[j];
-        if (cisla[j] < min)
-            min = cisla[j];
-    } 
+    int min = GetLocalMinimum(numbers, number_count);
+    int max = GetLocalMaximum(numbers, number_count);
 
-    float cislaA[pocet_cisel];
+    /* Output */
+    printf("Median %.02f\n",     GetMedian(numbers, number_count));
+    printf("Number count: %d\n", number_count);
+    printf("Min: %d\n",          min);
+    printf("Max: %d\n",          max);
+    Histogram(histogram_size, min, max, number_count, numbers);
+    free(numbers);
+    return 0;
+}
+
+int GetLocalMinimum (const int * field, int count) {
+    int min = 10000;
+    for (int i = 0; i < count; i++) {
+        if (field[i] < min)
+            min = field[i];
+    }
+    return min;
+}
+
+int GetLocalMaximum (const int * field, int count) {
+    int max = -10000;
+    for (int i = 0; i < count; i++) {
+        if (field[i] > max)
+            max = field[i];
+    }
+    return max;
+}
+
+float GetMedian (const int * integer_numbers, int count) {
+    float numbers[count];
     float median = 0;
     float temp = 0;
-    for (int k = 0; k < pocet_cisel; k++) {
-        cislaA[k] = (float)cisla[k];
+
+    for (int i = 0; i < count; i++){
+        numbers[i] = (float)integer_numbers[i];
     }
-    for (int l = 0; l < pocet_cisel - 1; l++) {
-        for (int j = 0; j < pocet_cisel - l - 1; j++) {
-            if (cislaA[j] < cislaA[j + 1]) {
-                temp = cislaA[j];
-                cislaA[j] = cislaA[j + 1];
-                cislaA[j + 1] = temp;
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (numbers[j] < numbers[j + 1]) {
+                temp = numbers[j];
+                numbers[j] = numbers[j + 1];
+                numbers[j + 1] = temp;
             }
         }
     }
-    median = pocet_cisel%2 == 0 ? (cislaA[(pocet_cisel/2)-1]+cislaA[(pocet_cisel/2)])/2.0:cislaA[(pocet_cisel/2)];
+    median = count%2 == 0 ? (numbers[(count/2)-1]+numbers[(count/2)])/2.0:numbers[(count/2)];
+    return median;
+}
 
-    printf("Median %.02f\n", median);
-    printf("Number count: %d\n", pocet_cisel);
-    printf("Min: %d\n", min);
-    printf("Max: %d\n", max);
-
+void Histogram (int histogram_size, int min, int max, int number_count,const int * numbers) {
     printf("Histogram:\n");
-    float max_znak = 0;
-    int pocet_znaku = 0;
-    float lin_skal = 0;
-    float velikost = ((float)max - (float)min)/(float)sloupce;
-    for (int n = 0; n < sloupce; ++n) {
-        for (int j = 0; j < pocet_cisel; ++j) {
-            if (cisla[j] >= (float)min+(float)n*velikost && cisla[j] <= (float)min + ((float)n+1)*velikost)
-                pocet_znaku++;
-            if ((float)pocet_znaku > max_znak)
-                max_znak = (float)pocet_znaku;
+    float max_char = 0;
+    int amount     = 0;
+    float span     = ((float)max - (float)min)/(float)histogram_size;
+
+    for (int i = 0; i < histogram_size; ++i) {
+        for (int j = 0; j < number_count; ++j) {
+            if (numbers[j] >= (float)min+(float)i*span && numbers[j] <= (float)min + ((float)i+1)*span)
+                amount++;
+            if ((float)amount > max_char)
+                max_char = (float)amount;
         }
-        pocet_znaku = 0;
+        amount = 0;
     }
-    lin_skal = 25/max_znak;
-    pocet_znaku = 0;
-    for (int m = 0; m < sloupce; m++) {
-        printf("%5.01f - %5.01f|", (float)min+(float)m*velikost, (float)min+((float)m+1)*velikost);
-        for (int j = 0; j < pocet_cisel; ++j) {
-            if (cisla[j] >= (float)min+(float)m*velikost && cisla[j] <= (float)min+((float)m+1)*velikost) {
-                    pocet_znaku++;
+    amount = 0;
+    for (int i = 0; i < histogram_size; i++) {
+        printf("%5.01f - %5.01f|", (float)min+(float)i*span, (float)min+((float)i+1)*span);
+        for (int j = 0; j < number_count; ++j) {
+            if (numbers[j] >= (float)min+(float)i*span && numbers[j] <= (float)min+((float)i+1)*span) {
+                    amount++;
             }
         }
-        for (int j = 0; j < (int)(pocet_znaku*lin_skal); ++j) {
+        for (int j = 0; j < (int)(amount*(25/max_char)); ++j) {
             printf("=");
         }
         printf("\n");
-        pocet_znaku = 0;
+        amount = 0;
     }
-    free(cisla);
-    return 0;
 }

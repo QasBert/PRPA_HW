@@ -87,7 +87,7 @@ int main(){
             }
             break;
         case '*':
-            if (matrixA_row == matrixB_column)
+            if (matrixA_column == matrixB_row)
                 matrix_multiple(matrixA, matrixB, matrixA_row, matrixA_column, matrixB_column);
             else {
                 loading_error();
@@ -138,7 +138,7 @@ void matrix_substraction    (int ** matrixA, int ** matrixB, int row, int column
     for (int i = 0; i < row; i++){
         for (int j = 0; j < column; j++){
             sub[i][j] = matrixA[i][j] + temp[i][j];
-            if (i == column - 1)
+            if (j == column - 1)
                 printf ("%d", sub[i][j]);
             else
                 printf ("%d ", sub[i][j]);
