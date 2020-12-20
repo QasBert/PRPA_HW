@@ -81,13 +81,15 @@ int main() {
 
     // delete repeated words
     int count = 0;
+    int write = 0;
     for (int i = 0; i < word_count; i++) {
         for (int j = 0; j < word_count; j++) {
             if (strcmp(list_all[i], list[j]) == 0) {
+                write--;
                 break;
             }
             else {
-                if (frequency[i] == 0) {
+                if (frequency[write] == 0) {
                     strcpy(list[temp],list_all[i]);
                     frequency[temp] = frequency_all[i];
                     count++;
@@ -95,6 +97,7 @@ int main() {
                 }               
             }
         }
+        write++;
     }
     
     
