@@ -81,23 +81,27 @@ int main() {
 
     // delete repeated words
     int count = 0;
+
     int write = 0;
-    for (int i = 0; i < word_count; i++) {
-        for (int j = 0; j < word_count; j++) {
-            if (strcmp(list_all[i], list[j]) == 0) {
-                write--;
-                break;
-            }
-            else {
-                if (frequency[write] == 0) {
-                    strcpy(list[temp],list_all[i]);
-                    frequency[temp] = frequency_all[i];
+    for (int i = 0; i < word_count; i++){
+        for (int j = 0; j < word_count; j++){
+            if (strcmp(list_all[i], list_all[j]) == 0){
+                for (int k = 0; k < word_count; k++) {
+                    if (strcmp(list_all[i], list[k]) == 0) {
+                        write = 0;
+                        break;
+                    }
+                    else
+                        write = 1;
+                }
+                if (write == 1) {
+                    list[count] = list_all[i];
+                    frequency[count] = frequency_all[i];
                     count++;
-                    temp++;
-                }               
+                }
             }
         }
-        write++;
+        write = 0;
     }
     
     
@@ -116,7 +120,7 @@ int main() {
         printf("len%d: %zu\n", i, strlen(list[i]));
     }
 
-    free_memory(list_all, frequency_all, list, frequency, word_count, count);
+    //free_memory(list_all, frequency_all, list, frequency, word_count, count);
     return 0;
 }
 
