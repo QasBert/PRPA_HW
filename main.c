@@ -9,6 +9,7 @@ void null_frequency_list (int word_count, int * frequency);
 void fill_all_array (int word_count, char * text, char ** list);
 void get_word_frequency (int word_count, char ** word_list, int * frequncy_list);
 void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count);
+int remove_repeated (int word_count, int count, int * frequency_all, int * frequency, char ** list_all, char ** list);
 
 int main() {
     int case_sensitivity = 0; // 0-insensitive, 1-sensitive
@@ -81,29 +82,8 @@ int main() {
 
     // delete repeated words
     int count = 0;
-
-    int write = 0;
-    for (int i = 0; i < word_count; i++){
-        for (int j = 0; j < word_count; j++){
-            if (strcmp(list_all[i], list_all[j]) == 0){
-                for (int k = 0; k < word_count; k++) {
-                    if (strcmp(list_all[i], list[k]) == 0) {
-                        write = 0;
-                        break;
-                    }
-                    else
-                        write = 1;
-                }
-                if (write == 1) {
-                    list[count] = list_all[i];
-                    frequency[count] = frequency_all[i];
-                    count++;
-                }
-            }
-        }
-        write = 0;
-    }
-    
+    count = remove_repeated(word_count, count, frequency_all, frequency, list_all, list);
+       
     
 
     /* Output */
@@ -120,7 +100,8 @@ int main() {
         printf("len%d: %zu\n", i, strlen(list[i]));
     }
 
-    //free_memory(list_all, frequency_all, list, frequency, word_count, count);
+    free_memory(list_all, frequency_all, list, frequency, word_count, count);
+    
     return 0;
 }
 
@@ -195,11 +176,36 @@ void get_word_frequency ( int word_count, char ** word_list, int * frequency_lis
 }
 
 void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count) {
-    for (int i = 0; i < word_count; i++)
-        free(list_all[i]);
+    //for (int i = 0; i < word_count; i++)
+    //    free(list_all[i]);
     free(list_all);
     free(frequency_all);
-    for (int i = 0; i < count; i++)
-        free(list[i]);
+    //for (int i = 0; i < count; i++)
+    //    free(list[i]);
     free(frequency);
+}
+
+int remove_repeated (int word_count, int count, int * frequency_all, int * frequency, char ** list_all, char ** list) {
+    int write = 0;
+    for (int i = 0; i < word_count; i++){
+        for (int j = 0; j < word_count; j++){
+            if (strcmp(list_all[i], list_all[j]) == 0){
+                for (int k = 0; k < word_count; k++) {
+                    if (strcmp(list_all[i], list[k]) == 0) {
+                        write = 0;
+                        break;
+                    }
+                    else
+                        write = 1;
+                }
+                if (write == 1) {
+                    list[count] = list_all[i];
+                    frequency[count] = frequency_all[i];
+                    count++;
+                }
+            }
+        }
+        write = 0;
+    }
+    return count;
 }
