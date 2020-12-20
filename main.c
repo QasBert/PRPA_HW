@@ -7,7 +7,8 @@ void edit_input (int size, char * input, int case_sensitivity);
 int get_word_count (int size, char * input);
 void null_frequency_list (int word_count, int * frequency);
 void fill_all_array (int word_count, char * text, char ** list);
-//void get_word_frequency (int word_count, char ** word_list, int * frequncy_list);
+void get_word_frequency (int word_count, char ** word_list, int * frequncy_list);
+void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count);
 
 int main() {
     int case_sensitivity = 0; // 0-insensitive, 1-sensitive
@@ -106,16 +107,13 @@ int main() {
         }
         printf(" %d\n", frequency[i]);
     }
-    printf("Pocet slov:         %d\n\n", count);
+    printf("Pocet slov:          %d\n\n", count);
     
     for (int i = 0; i < count; i ++) {
         printf("len%d: %zu\n", i, strlen(list[i]));
     }
 
-    // free(list_all);
-    // free(frequency_all);
-    // free(list);
-    // free(frequency);
+    free_memory(list_all, frequency_all, list, frequency, word_count, count);
     return 0;
 }
 
@@ -138,6 +136,7 @@ void edit_input (int size, char * input, int case_sensitivity) {
 int get_word_count (int size, char * input) {
     int count = 1;
     for (int i = 0; i < size; i++) {
+        // if is change from space to letter -> word_count++
         if (input[i] == 32 && input[i+1] != 32)
             count++;
     }
@@ -145,6 +144,7 @@ int get_word_count (int size, char * input) {
 }
 
 void null_frequency_list (int word_count, int * frequency) {
+    // set 0 for all positions
     for (int i = 0; i < word_count; i++){
         frequency[i] = 0;
     }
@@ -154,6 +154,7 @@ void fill_all_array (int word_count, char * text, char ** list) {
     int position = 0;
     for (int i = 0; i < word_count; i ++) {
         for (int j = 0; j < 20; j++) {
+            // if character is space or new line - fill with space; else write character into matrix
             if (text[position] < 48) {
                 while (j < 20) {
                     list[i][j] = ' ';
@@ -166,6 +167,7 @@ void fill_all_array (int word_count, char * text, char ** list) {
             position++;
         }
     }
+    // check for new lines
     for (int i = 0; i < word_count; i++) {
         for (int j = 0; j < 20; j++){
             if (list[i][j] == '\n') 
@@ -174,13 +176,23 @@ void fill_all_array (int word_count, char * text, char ** list) {
     }
 }
 
-/*void get_word_frequency ( int word_count, char ** word_list, int * frequency_list) { 
+void get_word_frequency ( int word_count, char ** word_list, int * frequency_list) { 
     for (int i = 0; i < word_count; i++) {
         for (int j = 0; j < word_count; j++) {
+            // compare one word with others
             if (strcmp(word_list[i], word_list[j]) == 0) {
                 frequency_list[i]++;
             }
         }
     }
-}*/
+}
 
+void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count) {
+    for (int i = 0; i < word_count; i++)
+        free(list_all[i]);
+    free(list_all);
+    free(frequency_all);
+    for (int i = 0; i < count; i++)
+        free(list[i]);
+    free(frequency);
+}
