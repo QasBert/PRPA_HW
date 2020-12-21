@@ -171,12 +171,13 @@ void get_word_frequency ( int word_count, char ** word_list, int * frequency_lis
 }
 
 void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count) {
-    //for (int i = 0; i < word_count; i++)
-    //    free(list_all[i]);
-    free(list_all);
+    for (int i = 0; i < word_count; i++) {
+        free(list_all[i]);
+        //free(list[i]);
+    }
+    //free(list_all);
+    //free(list);
     free(frequency_all);
-    //for (int i = 0; i < count; i++)
-    //    free(list[i]);
     free(frequency);
 }
 
