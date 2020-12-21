@@ -27,12 +27,11 @@ int main() {
             text[temp] = character;
             temp++;
             // if array is full
-            if (temp = current_size) {
+            if (temp == current_size) {
                 current_size = temp + 1;
                 text = realloc(text, current_size * sizeof(char));
             }
         }
-
     }
     word_count = get_word_count(current_size, text);
     temp = 0;
@@ -111,7 +110,7 @@ int main() {
 
 
 char nonwanted_char (char c) {
-    if ((c < 32) || (c >= 33 && c <= 47)||(c >=58 && c <= 64)||(c >=123))
+    if ((c >= 33 && c <= 47)||(c >=58 && c <= 64)||(c >=123))
         return 0;
     return c;
 }
@@ -120,7 +119,7 @@ int get_word_count (int size, char * input) {
     int count = 1;
     for (int i = 0; i < size; i++) {
         // if is change from space to letter -> word_count++
-        if (input[i] == 32 && input[i+1] != 32)
+        if (input[i] <= 32 && input[i+1] > 32)
             count++;
     }
     return count;
@@ -143,7 +142,8 @@ void fill_all_array (int word_count, char * text, char ** list) {
                     list[i][j] = ' ';
                     j++;
                 }
-                position++;
+                while (text[position] < 48)
+                    position++;
                 break;
             }
             list[i][j] = text[position];
