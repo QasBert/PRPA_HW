@@ -3,7 +3,7 @@
 #include <string.h>
 /* HW09 - Analyza textu */
 
-void edit_input (int size, char * input, int case_sensitivity);
+char nonwanted_char (char c);
 int get_word_count (int size, char * input);
 void null_frequency_list (int word_count, int * frequency);
 void fill_all_array (int word_count, char * text, char ** list);
@@ -21,15 +21,19 @@ int main() {
 
     /* input */
     while (scanf("%c", &character) == 1) {
-        text[temp] = character;
-        temp++;
-        // if array is full -> increment array size
-        if (temp == current_size) {
-            current_size = temp + 1;
-            text = realloc(text, current_size * sizeof(char));
+        if (nonwanted_char(character) != 0){
+            if (case_sensitivity == 0 && character >= 'A' && character <= 'Z')
+                character += 32;
+            text[temp] = character;
+            temp++;
+            // if array is full
+            if (temp = current_size) {
+                current_size = temp + 1;
+                text = realloc(text, current_size * sizeof(char));
+            }
         }
+
     }
-    edit_input(current_size, text, case_sensitivity);
     word_count = get_word_count(current_size, text);
     temp = 0;
 
@@ -105,20 +109,11 @@ int main() {
     return 0;
 }
 
-void edit_input (int size, char * input, int case_sensitivity) {
-    for (int i = 0; i < size; i++) {
-        // check for non wanted chars
-        if ((input[i] >= 33 && input[i] <= 47)||(input[i] >=58 && input[i] <= 64)||(input[i] >=123)){
-            for (int j = i; j < size; j++) {
-                input[j] = input[j+1];
-            }
-        }
-        // If case insensitivity -> transfer uppercase to lower
-        if (case_sensitivity == 0) {
-            if (input[i] >= 65 && input[i] <= 90)
-                input[i] += 32;
-        }
-    }
+
+char nonwanted_char (char c) {
+    if ((c < 32) || (c >= 33 && c <= 47)||(c >=58 && c <= 64)||(c >=123))
+        return 0;
+    return c;
 }
 
 int get_word_count (int size, char * input) {
