@@ -13,7 +13,7 @@ int remove_repeated (int word_count, int count, int * frequency_all, int * frequ
 
 int main() {
     int case_sensitivity = 0; // 0-insensitive, 1-sensitive
-    char *text = (char*)malloc(1*sizeof(char));
+    char *text = (char*)malloc(2*sizeof(char));
     int word_count = 1;
     char character;
     int current_size = 1;
@@ -30,14 +30,18 @@ int main() {
             if (temp == current_size) {
                 current_size = temp + 1;
                 text = realloc(text, current_size * sizeof(char));
+                text[temp] = 32;
             }
         }
     }
-    word_count = get_word_count(current_size, text);
+    /*for (int i = 0; i < current_size; i++) {
+        printf("Text[%d]:  %c\n", i, text[i]);
+    }*/
+    word_count = get_word_count(current_size-1, text);
     temp = 0;
-
+    //printf("%d\n", word_count);
     char *list_all[word_count]; // 2D matrix: rows = words, columns = characters
-    // malloc 20 positions for every word
+    // malloc 20 positions for every word ahoj jak se mas mam se dobre jak se mas ty ja se mam taky dobre
     for (int i = 0; i < word_count; i++) {
         list_all[i] = (char *)malloc(20 * sizeof(char));
     }
@@ -63,15 +67,15 @@ int main() {
         }
     }*/
 
-    printf("\n");
+    /*printf("\n");
     for (int i = 0; i < word_count; i++){
         printf("%s", list_all[i]);
         printf("\n");
-    }
+    }*/
 
     free(text); // Text array no longer needed
 
-    int *frequency_all = (int*)malloc(word_count*sizeof(int)); // craete number vector for word frequency
+    int *frequency_all = (int*)malloc((word_count)*sizeof(int)); // craete number vector for word frequency
     null_frequency_list(word_count, frequency_all); // fill vector with 0
     get_word_frequency(word_count, list_all, frequency_all);
 
@@ -79,6 +83,11 @@ int main() {
     char *list[word_count];
     for (int i = 0; i < word_count; i++) {
         list[i] = (char *)malloc(20 * sizeof(char));
+    }
+    for (int i = 0; i < word_count; i++){
+        for (int j = 0; j < 20; j++) {
+            list[i][j] = 32;
+        }
     }
     int *frequency = (int *)malloc(word_count*sizeof(int));
     null_frequency_list(word_count, frequency);
@@ -99,9 +108,9 @@ int main() {
     }
     printf("Pocet slov:          %d\n\n", count);
     
-    for (int i = 0; i < count; i ++) {
+    /*for (int i = 0; i < count; i ++) {
         printf("len%d: %zu\n", i, strlen(list[i]));
-    }
+    }*/
 
     free_memory(list_all, frequency_all, list, frequency, word_count, count);
     
@@ -118,6 +127,9 @@ char nonwanted_char (char c) {
 int get_word_count (int size, char * input) {
     int count = 1;
     for (int i = 0; i < size; i++) {
+        if (input[i+1] == 0) {
+            break;
+        }
         // if is change from space to letter -> word_count++
         if (input[i] <= 32 && input[i+1] > 32)
             count++;
@@ -136,25 +148,23 @@ void fill_all_array (int word_count, char * text, char ** list) {
     int position = 0;
     for (int i = 0; i < word_count; i ++) {
         for (int j = 0; j < 20; j++) {
+            if (text[position] == 0)
+                break;
             // if character is space or new line - fill with space; else write character into matrix
-            if (text[position] < 48) {
+            if (text[position] < 48) {               
                 while (j < 20) {
-                    list[i][j] = ' ';
+                    list[i][j] = 32;
                     j++;
                 }
-                while (text[position] < 48)
+                while (text[position] < 48 && text[position] != 0) {
+                    if (text[position] == 0)
+                        break;
                     position++;
+                }
                 break;
             }
             list[i][j] = text[position];
             position++;
-        }
-    }
-    // check for new lines
-    for (int i = 0; i < word_count; i++) {
-        for (int j = 0; j < 20; j++){
-            if (list[i][j] == '\n') 
-                list[i][j] = 32;
         }
     }
 }
