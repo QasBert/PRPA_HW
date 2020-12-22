@@ -6,7 +6,7 @@
 char nonwanted_char (char c);
 int get_word_count (int size, char * input);
 void null_frequency_list (int word_count, int * frequency);
-void fill_all_array (int word_count, char * text, char ** list);
+void fill_all_array (int word_count, int max_position, char * text, char ** list);
 void get_word_frequency (int word_count, char ** word_list, int * frequncy_list);
 void free_memory (char ** list_all, int * frequency_all, char ** list, int * frequency, int word_count, int count);
 int remove_repeated (int word_count, int count, int * frequency_all, int * frequency, char ** list_all, char ** list);
@@ -34,18 +34,14 @@ int main() {
             }
         }
     }
-    /*for (int i = 0; i < current_size; i++) {
-        printf("Text[%d]:  %c\n", i, text[i]);
-    }*/
+
     word_count = get_word_count(current_size-1, text);
     temp = 0;
-    //printf("%d\n", word_count);
-    char *list_all[word_count]; // 2D matrix: rows = words, columns = characters
-    // malloc 20 positions for every word ahoj jak se mas mam se dobre jak se mas ty ja se mam taky dobre
-    for (int i = 0; i < word_count; i++) {
-        list_all[i] = (char *)malloc(20 * sizeof(char));
-    }
-    fill_all_array(word_count, text, list_all);
+
+    char *list_all[word_count]; 
+    for (int i = 0; i < word_count; i++)
+        list_all[i] = (char*)malloc(20*sizeof(char));
+    fill_all_array(word_count,current_size,text,list_all);
     /*for (int i = 0; i < word_count; i++) {
         for (int j = 0; j < 20; j++) {
             if (text[temp] < 48) {
@@ -53,24 +49,13 @@ int main() {
                     list_all[i][j] = 32;
                     j++;
                 }
-                temp++;
+                while ((text[temp] == 32 || text[temp] == '\n') && temp < current_size-1)
+                     temp++;
                 break;
             }
             list_all[i][j] = text[temp];
             temp++;
         }
-    }
-    for (int i = 0; i < word_count; i++) {
-        for (int j = 0; j < 20; j++) {
-            if (list_all[i][j] == '\n')
-                list_all[i][j] = 32;
-        }
-    }*/
-
-    /*printf("\n");
-    for (int i = 0; i < word_count; i++){
-        printf("%s", list_all[i]);
-        printf("\n");
     }*/
 
     free(text); // Text array no longer needed
@@ -94,8 +79,7 @@ int main() {
 
     // delete repeated words
     int count = 0;
-    count = remove_repeated(word_count, count, frequency_all, frequency, list_all, list);
-       
+    count = remove_repeated(word_count, count, frequency_all, frequency, list_all, list); 
     
 
     /* Output */
@@ -107,10 +91,6 @@ int main() {
         printf(" %d\n", frequency[i]);
     }
     printf("Pocet slov:          %d\n\n", count);
-    
-    /*for (int i = 0; i < count; i ++) {
-        printf("len%d: %zu\n", i, strlen(list[i]));
-    }*/
 
     free_memory(list_all, frequency_all, list, frequency, word_count, count);
     
@@ -144,21 +124,17 @@ void null_frequency_list (int word_count, int * frequency) {
     }
 }
 
-void fill_all_array (int word_count, char * text, char ** list) {
+void fill_all_array (int word_count, int max_position, char * text, char ** list) {
     int position = 0;
     for (int i = 0; i < word_count; i ++) {
         for (int j = 0; j < 20; j++) {
-            if (text[position] == 0)
-                break;
             // if character is space or new line - fill with space; else write character into matrix
             if (text[position] < 48) {               
                 while (j < 20) {
                     list[i][j] = 32;
                     j++;
                 }
-                while (text[position] < 48 && text[position] != 0) {
-                    if (text[position] == 0)
-                        break;
+                while ((text[position] == 32 || text[position] == '\n') && position < max_position-1) {
                     position++;
                 }
                 break;

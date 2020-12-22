@@ -28,7 +28,7 @@ int main() {
         }
     }
     tmp1 = 0;
-    for (int i = 0; i < input_size; i++)
+    for (int i = 0; i < input_size-1; i++)
         printf("%c", input[i]);
     printf("\n");
 
@@ -40,7 +40,7 @@ int main() {
             word_count++;
     }
     printf("Celkovy pocet slov: %d\n", word_count);
-    printf("strlen(input): %lu\n", strlen(input));
+    //printf("strlen(input): %lu\n", strlen(input));
 
 
     char *list_all[word_count];
@@ -48,16 +48,26 @@ int main() {
         list_all[i] = (char*)malloc(20*sizeof(char));
     for (int i = 0; i < word_count; i++) {
         for (int j = 0; j < 20; j++) {
-            list_all[i][j] = 'x';
+            if (input[tmp1] < 48){
+                while (j < 20) {
+                    list_all[i][j] =32;
+                    j++;
+                }
+                while ((input[tmp1] == 32 || input[tmp1] == '\n') && tmp1 < input_size-1)
+                    tmp1++;
+                break;
+            }
+            list_all[i][j] = input[tmp1];
+            tmp1++;
         }
     }
-    for (int i = 0; i < word_count; i++)
-        printf("line %d (%lu): %s\n", i, strlen(list_all[i]), list_all[i]);
-    
+    /*for (int i = 0; i < word_count; i++)
+            printf("line %d: %s\n", i, list_all[i]);
+    */
 
 
     free(input);
     for (int i = 0; i < word_count; i++)
-        free(list_all);
+        free(list_all[i]);
     return 0;
 }
