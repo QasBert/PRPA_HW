@@ -4,4 +4,4 @@ project(PRPA_HW C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(PRPA_HW
-        01/main.c)
+        08/main.c)

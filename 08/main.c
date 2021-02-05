@@ -9,7 +9,7 @@ void Histogram        (int histogram_size, int min, int max, int number_count,co
 
 int main(){
     /* Input */
-    int current_size    = 0;
+    int current_size;
     int number_count    = 0;
     int histogram_size  = 0;
     int *numbers        = (int *)malloc(1 * sizeof(int));
@@ -75,8 +75,8 @@ int GetLocalMaximum (const int * field, int count) {
 
 float GetMedian (const int * integer_numbers, int count) {
     float numbers[count];
-    float median = 0;
-    float temp = 0;
+    float median;
+    float temp;
 
     for (int i = 0; i < count; i++){
         numbers[i] = (float)integer_numbers[i];
